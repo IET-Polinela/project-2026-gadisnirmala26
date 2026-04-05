@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Data Laporan - CleanPulse</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(to bottom right, #ffffff, #bae6fd);
+}
+
+.container {
+    width: 80%;
+    margin: auto;
+    margin-top: 50px;
+}
+
+h1 {
+    text-align: center;
+    color: #0284c7;
+}
+
+.card {
+    background: white;
+    padding: 20px;
+    margin-top: 20px;
+    border-radius: 15px;
+    box-shadow: 0px 5px 15px rgba(0,0,0,0.1);
+}
+
+.btn {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 8px 15px;
+    background-color: #38bdf8;
+    color: white;
+    text-decoration: none;
+    border-radius: 50px;
+    font-size: 14px;
+}
+
+.btn:hover {
+    background-color: #0ea5e9;
+}
+
+.nav {
+    text-align: center;
+    margin-bottom: 20px;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>📊 Data Laporan</h1>
+
+    <div class="nav">
+        <a href="/" class="btn">Home</a>
+        <a href="/add/" class="btn">Tambah</a>
+    </div>
+
+    {% for report in reports %}
+    <div class="card">
+        <b>Title:</b> {{ report.title }} <br>
+        <b>Category:</b> {{ report.category }} <br>
+        <b>Description:</b> {{ report.description }} <br>
+        <b>Location:</b> {{ report.location }} <br>
+        <b>Status:</b> {{  report.status }} <br>
+
+        <a href="/update/{{ report.id }}/" class="btn">Edit</a>
+        <a href="/delete/{{ report.id }}/" class="btn">Hapus</a>
+    </div>
+    {% endfor %}
+
+</div>
+
+</body>
+</html>

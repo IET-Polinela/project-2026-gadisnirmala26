@@ -1,9 +1,11 @@
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path
+from django.http import HttpResponse
+
+def welcome(request):
+    return HttpResponse("Selamat Datang")
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('main_app.urls')),
-    path('about/', include('about.urls')),
-    path('contacts/', include('contacts.urls')),
+    path('welcome/', welcome),
 ]
