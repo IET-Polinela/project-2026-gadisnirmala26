@@ -38,6 +38,8 @@ h1 {
     text-decoration: none;
     border-radius: 50px;
     font-size: 14px;
+    border: none;
+    cursor: pointer;
 }
 
 .btn:hover {
@@ -69,10 +71,45 @@ h1 {
         <b>Category:</b> {{ report.category }} <br>
         <b>Description:</b> {{ report.description }} <br>
         <b>Location:</b> {{ report.location }} <br>
-        <b>Status:</b> {{  report.status }} <br>
+        <b>Status:</b> {{ report.status }} <br>
 
+        <!-- CRUD BUTTON -->
         <a href="/update/{{ report.id }}/" class="btn">Edit</a>
         <a href="/delete/{{ report.id }}/" class="btn">Hapus</a>
+        <a href="{% url 'detail_report' report.pk %}" class="btn">Detail</a>
+
+        <!-- ========================= -->
+        <!-- WORKFLOW BUTTON -->
+        <!-- ========================= -->
+
+        {% if report.status == 'REPORTED' %}
+        <form method="post" action="{% url 'update_status' report.pk %}">
+            {% csrf_token %}
+            <input type="hidden" name="status" value="VERIFIED">
+            <button type="submit" class="btn">Verifikasi</button>
+        </form>
+        {% endif %}
+
+        {% if report.status == 'VERIFIED' %}
+        <form method="post" action="{% url 'update_status' report.pk %}">
+            {% csrf_token %}
+            <input type="hidden" name="status" value="IN_PROGRESS">
+            <button type="submit" class="btn">Proses</button>
+        </form>
+        {% endif %}
+
+        {% if report.status == 'IN_PROGRESS' %}
+        <form method="post" action="{% url 'update_status' report.pk %}">
+            {% csrf_token %}
+            <input type="hidden" name="status" value="RESOLVED">
+            <button type="submit" class="btn">Selesai</button>
+        </form>
+        {% endif %}
+
+        {% if report.status == 'RESOLVED' %}
+        <p><b>✔ Laporan selesai</b></p>
+        {% endif %}
+
     </div>
     {% endfor %}
 
