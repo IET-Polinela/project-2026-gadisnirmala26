@@ -1,89 +1,64 @@
-<!DOCTYPE html>
-<html>
-<head>
-<title>Update Laporan - CleanPulse</title>
+{% extends 'base.html' %}
 
-<style>
-body {
-    margin: 0;
-    font-family: 'Segoe UI', sans-serif;
-    background: linear-gradient(to bottom right, #ffffff, #bae6fd);
-}
+{% block title %}Edit Laporan | CleanPulse{% endblock %}
 
-.container {
-    width: 50%;
-    margin: auto;
-    margin-top: 60px;
-}
+{% block content %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/">Home</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'report_list' %}">Reports</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Edit Laporan</li>
+    </ol>
+</nav>
 
-.card {
-    background: white;
-    padding: 30px;
-    border-radius: 20px;
-    box-shadow: 0px 5px 20px rgba(0,0,0,0.1);
-}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="page-card p-4 p-md-5">
+            <h1 class="page-title">Edit Laporan</h1>
+            <p class="section-subtitle mb-4">Perbarui data laporan sesuai kondisi terbaru.</p>
 
-h1 {
-    text-align: center;
-    color: #0284c7;
-}
+            <form method="post" id="updateForm">
+                {% csrf_token %}
 
-input, textarea, select {
-    width: 100%;
-    padding: 10px;
-    margin-top: 10px;
-    margin-bottom: 15px;
-    border-radius: 10px;
-    border: 1px solid #ccc;
-}
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Judul</label>
+                    {{ form.title }}
+                </div>
 
-.btn {
-    display: inline-block;
-    padding: 12px 25px;
-    background-color: #38bdf8;
-    color: white;
-    text-decoration: none;
-    border-radius: 50px;
-    border: none;
-    cursor: pointer;
-    font-weight: bold;
-}
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Kategori</label>
+                    {{ form.category }}
+                </div>
 
-.btn:hover {
-    background-color: #0ea5e9;
-}
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Deskripsi</label>
+                    {{ form.description }}
+                </div>
 
-.nav {
-    text-align: center;
-    margin-top: 20px;
-}
-</style>
+                <div class="mb-4">
+                    <label class="form-label fw-semibold">Lokasi</label>
+                    {{ form.location }}
+                </div>
 
-</head>
-
-<body>
-
-<div class="container">
-
-    <div class="card">
-
-        <h1>✏️ Update Laporan</h1>
-
-        <form method="POST">
-            {% csrf_token %}
-            {{ form.as_p }}
-
-            <button type="submit" class="btn">Update</button>
-        </form>
-
+                <div class="d-flex gap-2 flex-wrap">
+                    <button type="submit" class="btn btn-clean" id="updateBtn">
+                        <span id="updateText">Update</span>
+                        <span class="spinner-border spinner-border-sm d-none ms-2" id="updateSpinner"></span>
+                    </button>
+                    <a href="{% url 'report_list' %}" class="btn btn-secondary btn-soft px-4">Kembali</a>
+                </div>
+            </form>
+        </div>
     </div>
-
-    <div class="nav">
-        <a href="/" class="btn">Home</a>
-        <a href="/reports/" class="btn">Data</a>
-    </div>
-
 </div>
+{% endblock %}
 
-</body>
-</html>
+{% block extra_js %}
+<script>
+document.getElementById('updateForm').addEventListener('submit', function() {
+    document.getElementById('updateBtn').disabled = true;
+    document.getElementById('updateText').textContent = 'Loading...';
+    document.getElementById('updateSpinner').classList.remove('d-none');
+});
+</script>
+{% endblock %}

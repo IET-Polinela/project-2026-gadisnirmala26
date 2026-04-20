@@ -1,68 +1,58 @@
-<!DOCTYPE html>
-<html>
-<head>
-<title>Detail Laporan - CleanPulse</title>
+{% extends 'base.html' %}
 
-<style>
-body {
-    margin: 0;
-    font-family: 'Segoe UI', sans-serif;
-    background: linear-gradient(to bottom right, #ffffff, #bae6fd);
-}
+{% block title %}Detail Laporan | CleanPulse{% endblock %}
 
-.container {
-    width: 60%;
-    margin: auto;
-    margin-top: 50px;
-}
+{% block content %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/">Home</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'report_list' %}">Reports</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Detail Laporan</li>
+    </ol>
+</nav>
 
-.card {
-    background: white;
-    padding: 25px;
-    border-radius: 15px;
-    box-shadow: 0px 5px 15px rgba(0,0,0,0.1);
-}
+<div class="row justify-content-center">
+    <div class="col-lg-9">
+        <div class="page-card p-4 p-md-5">
+            <h1 class="page-title">📄 Detail Laporan</h1>
 
-h1 {
-    text-align: center;
-    color: #0284c7;
-}
+            <div class="mb-3">
+                <strong>Judul:</strong>
+                <p class="mb-0 mt-1">{{ report.title }}</p>
+            </div>
 
-.btn {
-    display: inline-block;
-    margin-top: 15px;
-    padding: 8px 15px;
-    background-color: #38bdf8;
-    color: white;
-    text-decoration: none;
-    border-radius: 50px;
-    font-size: 14px;
-}
+            <div class="mb-3">
+                <strong>Kategori:</strong>
+                <p class="mb-0 mt-1">{{ report.category }}</p>
+            </div>
 
-.btn:hover {
-    background-color: #0ea5e9;
-}
-</style>
+            <div class="mb-3">
+                <strong>Deskripsi:</strong>
+                <p class="mb-0 mt-1">{{ report.description }}</p>
+            </div>
 
-</head>
+            <div class="mb-3">
+                <strong>Lokasi:</strong>
+                <p class="mb-0 mt-1">{{ report.location }}</p>
+            </div>
 
-<body>
+            <div class="mb-4">
+                <strong>Status:</strong><br>
+                <div class="mt-2">
+                    {% if report.status == 'REPORTED' %}
+                        <span class="status-pill status-reported">Reported</span>
+                    {% elif report.status == 'VERIFIED' %}
+                        <span class="status-pill status-verified">Verified</span>
+                    {% elif report.status == 'IN_PROGRESS' %}
+                        <span class="status-pill status-progress">In Progress</span>
+                    {% elif report.status == 'RESOLVED' %}
+                        <span class="status-pill status-resolved">Resolved</span>
+                    {% endif %}
+                </div>
+            </div>
 
-<div class="container">
-
-    <h1>📄 Detail Laporan</h1>
-
-    <div class="card">
-        <b>Title:</b> {{ report.title }} <br><br>
-        <b>Category:</b> {{ report.category }} <br><br>
-        <b>Description:</b> {{ report.description }} <br><br>
-        <b>Location:</b> {{ report.location }} <br><br>
-        <b>Status:</b> {{ report.status }} <br><br>
-
-        <a href="/reports/" class="btn">Kembali</a>
+            <a href="{% url 'report_list' %}" class="btn btn-clean">Kembali</a>
+        </div>
     </div>
-
 </div>
-
-</body>
-</html>
+{% endblock %}

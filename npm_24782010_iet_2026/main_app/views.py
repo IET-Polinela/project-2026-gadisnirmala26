@@ -3,6 +3,8 @@ from django.urls import reverse_lazy
 from .models import Report
 from django.views import View
 from django.shortcuts import get_object_or_404, redirect
+from django.contrib import messages
+from .forms import ReportForm
 
 # Home
 class HomeView(TemplateView):
@@ -43,6 +45,17 @@ class ReportUpdateStatusView(View):
     def post(self, request, pk):
         report = get_object_or_404(Report, pk=pk)
         new_status = request.POST.get('status')
-        report.status = new_status
-        report.save()
+
+        allowed_transitions = {
+            'REPORTED': 'VERIFIED',
+            'VERIFIED': 'IN_PROGRESS',
+            'IN_PROGRESS': 'RESOLVED',
+        }
+
+        if report.status in allowed_transitions and allowed_transitions[report.status] == new_status:
+            report.status = new_status
+            report.save()
+            messages.success(request, f'Status laporan berhasil diubah menjadi {report.get_status_display()}.')
+        else:
+            messages.error(request, 'Perubahan status tidak valid.')
         return redirect('report_list')
