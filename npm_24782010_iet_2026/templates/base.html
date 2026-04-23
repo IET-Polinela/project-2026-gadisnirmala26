@@ -29,12 +29,20 @@
         .navbar-cleanpulse {
             background: linear-gradient(90deg, #38bdf8, #0284c7);
             box-shadow: 0 4px 18px rgba(2, 132, 199, 0.18);
+            padding-top: 12px;
+            padding-bottom: 12px;
         }
 
-        .navbar-brand,
+        .navbar-brand {
+            color: white !important;
+            font-weight: 800;
+            font-size: 1.8rem;
+        }
+
         .nav-link {
             color: white !important;
             font-weight: 600;
+            margin-left: 8px;
         }
 
         .nav-link:hover {
@@ -169,6 +177,23 @@
             color: #64748b;
         }
 
+        .auth-btn {
+            background: white;
+            color: #0284c7 !important;
+            border: none;
+            border-radius: 999px;
+            font-weight: 600;
+            padding: 8px 18px;
+            margin-left: 12px;
+            transition: 0.3s;
+            display: inline-block;
+        }
+
+        .auth-btn:hover {
+            background: #e0f2fe;
+            color: #0369a1 !important;
+        }
+
         @media (max-width: 768px) {
             .page-title {
                 font-size: 1.8rem;
@@ -181,6 +206,11 @@
             .hero-desc {
                 font-size: 0.95rem;
                 padding: 0 10px;
+            }
+
+            .auth-btn {
+                margin-left: 0;
+                margin-top: 10px;
             }
         }
     </style>
@@ -198,11 +228,27 @@
             </button>
 
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
+                <ul class="navbar-nav ms-auto align-items-lg-center">
                     <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
                     <li class="nav-item"><a class="nav-link" href="/reports/">Reports</a></li>
                     <li class="nav-item"><a class="nav-link" href="/about/">About</a></li>
                     <li class="nav-item"><a class="nav-link" href="/contacts/">Contact</a></li>
+
+                    {% if user.is_authenticated %}
+                        <li class="nav-item">
+                            <form method="post" action="{% url 'logout' %}" class="d-inline">
+                                {% csrf_token %}
+                                <button type="submit" class="auth-btn">Logout</button>
+                            </form>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'register' %}">Register</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="auth-btn text-decoration-none" href="{% url 'login' %}">Login</a>
+                        </li>
+                    {% endif %}
                 </ul>
             </div>
         </div>

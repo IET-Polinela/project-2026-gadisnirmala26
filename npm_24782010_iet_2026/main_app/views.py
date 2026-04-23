@@ -6,6 +6,18 @@ from django.shortcuts import get_object_or_404, redirect
 from django.contrib import messages
 from .forms import ReportForm
 
+class AdminRequiredMixin:
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            messages.error(request, 'Silakan login terlebih dahulu.')
+            return redirect('login')
+
+        if not request.user.is_admin:
+            messages.error(request, 'Akses ditolak. Hanya admin yang dapat mengakses fitur ini.')
+            return redirect('report_list')
+
+        return super().dispatch(request, *args, **kwargs)
+
 # Home
 class HomeView(TemplateView):
     template_name = 'main_app/home.html'
@@ -17,21 +29,21 @@ class ReportListView(ListView):
     context_object_name = 'reports'
 
 # CREATE
-class ReportCreateView(CreateView):
+class ReportCreateView(AdminRequiredMixin, CreateView):
     model = Report
     fields = ['title', 'category', 'description', 'location']
     template_name = 'main_app/add_report.html'
     success_url = reverse_lazy('report_list')
 
 # UPDATE
-class ReportUpdateView(UpdateView):
+class ReportUpdateView(AdminRequiredMixin, UpdateView):
     model = Report
     fields = ['title', 'category', 'description', 'location']
     template_name = 'main_app/update_report.html'
     success_url = reverse_lazy('report_list')
 
 # DELETE
-class ReportDeleteView(DeleteView):
+class ReportDeleteView(AdminRequiredMixin, DeleteView):
     model = Report
     template_name = 'main_app/report_confirm_delete.html'
     success_url = reverse_lazy('report_list')
@@ -43,6 +55,14 @@ class ReportDetailView(DetailView):
 
 class ReportUpdateStatusView(View):
     def post(self, request, pk):
+        if not request.user.is_authenticated:
+            messages.error(request, 'Silakan login terlebih dahulu.')
+            return redirect('login')
+
+        if not request.user.is_admin:
+            messages.error(request, 'Akses ditolak. Hanya admin yang dapat mengubah status laporan.')
+            return redirect('report_list')
+
         report = get_object_or_404(Report, pk=pk)
         new_status = request.POST.get('status')
 

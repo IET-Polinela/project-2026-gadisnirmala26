@@ -49,6 +49,8 @@
                     <td>
                         <div class="d-flex flex-wrap gap-2">
                             <a href="{% url 'detail_report' report.pk %}" class="btn btn-info btn-sm text-white btn-soft">Detail</a>
+
+                            {% if user.is_authenticated and user.is_admin %}
                             <a href="{% url 'update_report' report.pk %}" class="btn btn-warning btn-sm text-dark btn-soft">Edit</a>
                             <a href="{% url 'delete_report' report.pk %}" class="btn btn-danger btn-sm btn-soft">Hapus</a>
 
@@ -75,6 +77,7 @@
                             </form>
                             {% elif report.status == 'RESOLVED' %}
                                 <span class="text-success fw-semibold">✔ Laporan selesai</span>
+                            {% endif %}
                             {% endif %}
                         </div>
                     </td>
