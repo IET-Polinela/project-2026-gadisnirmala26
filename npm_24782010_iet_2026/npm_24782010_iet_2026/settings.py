@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'usermanagement_24782010',
+    'dashboard_24782010',
     'main_app',
     'about',
     'contacts',

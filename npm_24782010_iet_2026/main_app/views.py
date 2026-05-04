@@ -5,6 +5,8 @@ from django.views import View
 from django.shortcuts import get_object_or_404, redirect
 from django.contrib import messages
 from .forms import ReportForm
+from django.http import JsonResponse
+
 
 class AdminRequiredMixin:
     def dispatch(self, request, *args, **kwargs):
@@ -79,3 +81,44 @@ class ReportUpdateStatusView(View):
         else:
             messages.error(request, 'Perubahan status tidak valid.')
         return redirect('report_list')
+
+class ReportSearchJsonView(View):
+    def get(self, request, *args, **kwargs):
+        query = request.GET.get('q', '').strip()
+
+        reports = Report.objects.all().order_by('-created_at')
+
+        if query:
+            reports = reports.filter(title__icontains=query) | reports.filter(category__icontains=query) | reports.filter(location__icontains=query)
+            reports = reports.order_by('-created_at')
+
+        data = []
+        for report in reports[:50]:
+            data.append({
+                'id': report.id,
+                'title': report.title,
+                'category': report.category,
+                'location': report.location,
+                'status': report.status,
+                'status_display': report.get_status_display(),
+            })
+
+        return JsonResponse({'results': data})
+
+
+class ReportDetailJsonView(View):
+    def get(self, request, pk, *args, **kwargs):
+        report = get_object_or_404(Report, pk=pk)
+
+        data = {
+            'id': report.id,
+            'title': report.title,
+            'category': report.category,
+            'description': report.description,
+            'location': report.location,
+            'status': report.status,
+            'status_display': report.get_status_display(),
+            'created_at': report.created_at.strftime('%d %B %Y %H:%M'),
+        }
+
+        return JsonResponse(data)

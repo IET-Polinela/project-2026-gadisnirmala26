@@ -19,6 +19,16 @@
     </a>
 </div>
 
+<div class="page-card p-3 mb-4">
+    <label for="liveSearchInput" class="form-label fw-semibold">Cari Laporan</label>
+    <input
+        type="text"
+        id="liveSearchInput"
+        class="form-control"
+        placeholder="Cari berdasarkan judul, kategori, atau lokasi..."
+    >
+</div>
+
 {% if reports %}
     <div class="table-responsive page-card p-0">
         <table class="table table-clean table-hover align-middle mb-0">
@@ -30,7 +40,7 @@
                     <th style="width: 320px;">Aksi</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody id="reportTableBody">
                 {% for report in reports %}
                 <tr>
                     <td>{{ report.title }}</td>
@@ -48,7 +58,11 @@
                     </td>
                     <td>
                         <div class="d-flex flex-wrap gap-2">
-                            <a href="{% url 'detail_report' report.pk %}" class="btn btn-info btn-sm text-white btn-soft">Detail</a>
+                            <button type="button"
+                                    class="btn btn-info btn-sm text-white btn-soft detail-btn"
+                                    data-id="{{ report.pk }}">
+                                Detail
+                            </button>
 
                             {% if user.is_authenticated and user.is_admin %}
                             <a href="{% url 'update_report' report.pk %}" class="btn btn-warning btn-sm text-dark btn-soft">Edit</a>
@@ -93,4 +107,146 @@
         <a href="{% url 'add_report' %}" class="btn btn-clean">+ Tambah Laporan</a>
     </div>
 {% endif %}
+
+<!-- Modal Detail -->
+<div class="modal fade" id="reportDetailModal" tabindex="-1" aria-labelledby="reportDetailModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content border-0 rounded-4 shadow">
+            <div class="modal-header">
+                <h5 class="modal-title fw-bold" id="reportDetailModalLabel">Detail Laporan</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div id="modalContent">
+                    <p class="text-muted">Memuat detail laporan...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const searchInput = document.getElementById('liveSearchInput');
+    const tableBody = document.getElementById('reportTableBody');
+    const modalElement = document.getElementById('reportDetailModal');
+    const modal = new bootstrap.Modal(modalElement);
+    const modalContent = document.getElementById('modalContent');
+
+    let debounceTimer;
+
+    function getStatusBadge(status) {
+        if (status === 'REPORTED') {
+            return '<span class="status-pill status-reported">Reported</span>';
+        }
+        if (status === 'VERIFIED') {
+            return '<span class="status-pill status-verified">Verified</span>';
+        }
+        if (status === 'IN_PROGRESS') {
+            return '<span class="status-pill status-progress">In Progress</span>';
+        }
+        if (status === 'RESOLVED') {
+            return '<span class="status-pill status-resolved">Resolved</span>';
+        }
+        return '<span class="status-pill">' + status + '</span>';
+    }
+
+    function renderResults(results) {
+        if (!results.length) {
+            tableBody.innerHTML = `
+                <tr>
+                    <td colspan="4" class="text-center text-muted py-4">Data tidak ditemukan.</td>
+                </tr>
+            `;
+            return;
+        }
+
+        tableBody.innerHTML = results.map(report => `
+            <tr>
+                <td>${report.title}</td>
+                <td>${report.location}</td>
+                <td>${getStatusBadge(report.status)}</td>
+                <td>
+                    <div class="d-flex flex-wrap gap-2">
+                        <button type="button"
+                                class="btn btn-info btn-sm text-white btn-soft detail-btn"
+                                data-id="${report.id}">
+                            Detail
+                        </button>
+                    </div>
+                </td>
+            </tr>
+        `).join('');
+    }
+
+    function fetchSearchResults(query) {
+        fetch(`/reports/search/?q=${encodeURIComponent(query)}`)
+            .then(response => response.json())
+            .then(data => {
+                console.log('Search JSON:', data);
+                renderResults(data.results);
+            })
+            .catch(error => {
+                console.error('Error search:', error);
+            });
+    }
+
+    searchInput.addEventListener('input', function () {
+        clearTimeout(debounceTimer);
+        const query = this.value;
+
+        debounceTimer = setTimeout(() => {
+            fetchSearchResults(query);
+        }, 300);
+    });
+
+    document.addEventListener('click', function (event) {
+        const detailButton = event.target.closest('.detail-btn');
+        if (!detailButton) return;
+
+        const reportId = detailButton.getAttribute('data-id');
+        modalContent.innerHTML = `<p class="text-muted">Memuat detail laporan...</p>`;
+        modal.show();
+
+        fetch(`/reports/${reportId}/json/`)
+            .then(response => response.json())
+            .then(data => {
+                console.log('Detail JSON:', data);
+
+                modalContent.innerHTML = `
+                    <div class="mb-3">
+                        <strong>Judul:</strong>
+                        <p class="mb-0 mt-1">${data.title}</p>
+                    </div>
+                    <div class="mb-3">
+                        <strong>Kategori:</strong>
+                        <p class="mb-0 mt-1">${data.category}</p>
+                    </div>
+                    <div class="mb-3">
+                        <strong>Deskripsi:</strong>
+                        <p class="mb-0 mt-1">${data.description}</p>
+                    </div>
+                    <div class="mb-3">
+                        <strong>Lokasi:</strong>
+                        <p class="mb-0 mt-1">${data.location}</p>
+                    </div>
+                    <div class="mb-3">
+                        <strong>Status:</strong><br>
+                        <div class="mt-2">${getStatusBadge(data.status)}</div>
+                    </div>
+                    <div class="mb-0">
+                        <strong>Dibuat pada:</strong>
+                        <p class="mb-0 mt-1">${data.created_at}</p>
+                    </div>
+                `;
+            })
+            .catch(error => {
+                console.error('Error detail:', error);
+                modalContent.innerHTML = `<p class="text-danger">Gagal memuat detail laporan.</p>`;
+            });
+    });
+});
+</script>
 {% endblock %}
