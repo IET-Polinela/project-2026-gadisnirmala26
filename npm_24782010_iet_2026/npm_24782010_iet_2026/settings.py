@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'usermanagement_24782010',
     'dashboard_24782010',
+    'rest_framework',
     'main_app',
     'about',
     'contacts',
