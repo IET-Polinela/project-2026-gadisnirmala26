@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import Report
+from django.contrib.auth import get_user_model
 
 
 class ReportSerializer(serializers.ModelSerializer):
