@@ -42,15 +42,43 @@ const routes = {
         </div>
       </aside>
       <section class="col-12 col-lg-6">
-        <div class="card dashboard-card p-5 text-center">
-          <div class="mb-4"><i class="bi bi-house-heart-fill" style="font-size: 60px; color: #0d8fd8;"></i></div>
-          <h1 class="fw-bold mb-3">Dashboard Citizen</h1>
-          <p class="text-muted">Selamat datang di CleanPulse Portal.</p>
-          <div class="alert alert-info mt-4 p-4">
-          Platform smart city berbasis data real-time yang menjaga kebersihan kota 
-          seperti sistem sirkulasi vital, memastikan kota tetap sehat, hidup, dan produktif.</div>
-        </div>
-      </section>
+      <div class="card dashboard-card p-5 text-center">
+      <div class="mb-4">
+        <i class="bi bi-house-heart-fill"
+        style="font-size: 60px; color: #0d8fd8;"></i>
+      </div>
+      <h1 class="fw-bold mb-3">
+        Dashboard Citizen
+      </h1>
+      <p class="text-muted">
+        Selamat datang di CleanPulse Portal.
+      </p>
+      <div class="alert alert-info mt-4 p-4">
+        Platform smart city berbasis data real-time yang menjaga
+        kebersihan kota seperti sistem sirkulasi vital,
+        memastikan kota tetap sehat, hidup, dan produktif.
+      </div>
+      <div class="d-flex justify-content-center mb-4">
+        <button
+            class="btn btn-primary me-2"
+            onclick="loadDashboardData('feed',1)"
+            style="background:#3ebbc4; border:none; font-weight:600; min-width:180px; color:white;">
+            Feed Kota
+        </button>
+        <button
+            class="btn btn-primary me-2"
+            onclick="loadDashboardData('my_reports',1)"
+            style="background:#194761; border:none; font-weight:600; min-width:180px; color:white;">
+            Laporan Saya
+        </button>
+      </div>
+      <div id="listContainer"></div>
+      <div
+        id="paginationContainer"
+        class="mt-3 text-center">
+      </div>
+    </div>
+    </section>
       <aside class="col-12 col-lg-3">
         <div class="card dashboard-card p-4">
           <div class="text-center mb-4">
@@ -59,19 +87,27 @@ const routes = {
               <i class="bi bi-broadcast" style="font-size: 32px; color: #0d8fd8;"></i>
             </div>
           </div>
-          <h4 class="fw-bold text-center mb-4">Smart City News</h4>
-          <div class="p-3 mb-3" style="border-radius: 14px; background: rgba(255,193,7,0.12);">
-            <h6 class="fw-bold mb-1">🚧 Perbaikan Jalan Aktif</h6>
-            <small class="text-muted">Pemeliharaan jalan utama sedang berlangsung.</small>
-          </div>
-          <div class="p-3 mb-3" style="border-radius: 14px; background: rgba(13,143,216,0.10);">
-            <h6 class="fw-bold mb-1">🌧 Potensi Hujan Tinggi</h6>
-            <small class="text-muted">Warga dihimbau berhati-hati saat berkendara.</small>
-          </div>
-          <div class="p-3" style="border-radius: 14px; background: rgba(34,197,94,0.10);">
-            <h6 class="fw-bold mb-1">🟢 Kota Aman</h6>
-            <small class="text-muted">Seluruh sistem monitoring berjalan normal.</small>
-          </div>
+          <h4 class="fw-bold text-center mb-4">Statistik Laporan</h4>
+          <div class="p-3 mb-2 rounded bg-light">
+            Draft:
+          <span id="draftCount">0</span>
+        </div>
+        <div class="p-3 mb-2 rounded bg-light">
+          Reported:
+        <span id="reportedCount">0</span>
+        </div>
+        <div class="p-3 mb-2 rounded bg-light">
+          Verified:
+        <span id="verifiedCount">0</span>
+        </div>
+        <div class="p-3 mb-2 rounded bg-light">
+          In Progress:
+        <span id="progressCount">0</span>
+        </div>
+        <div class="p-3 rounded bg-light">
+          Resolved:
+        <span id="resolvedCount">0</span>
+        </div>
         </div>
       </aside>
     </div>
@@ -95,25 +131,40 @@ const routes = {
       </aside>
       <section class="col-12 col-lg-9">
         <div class="card dashboard-card p-5">
-          <div class="d-flex align-items-center mb-4">
-            <div class="me-3" style="width: 60px; height: 60px; border-radius: 18px; background:
-             rgba(13,143,216,0.12); display: flex; align-items: center; justify-content: center;">
-              <i class="bi bi-file-earmark-text" style="font-size: 28px; color: #0d8fd8;"></i>
+          <div class="text-center mb-3">
+            <div class="text-center mb-4">
+            <div style="width: 95px; height: 95px; border-radius: 24px; background:
+             rgba(13,143,216,0.12); display: flex; align-items: center; justify-content: center; margin:0 auto 20px;">
+              <i class="bi bi-file-earmark-text" style="font-size: 42px; color: #0d8fd8;"></i>
             </div>
             <div>
-              <h1 class="fw-bold mb-1" style="font-size: 42px; letter-spacing: -1px;">Citizen Reports</h1>
-              <p class="text-muted mb-0" style="font-size: 17px;">Portal laporan warga SmartCity.</p>
+              <h1 class="fw-bold mb-2" style="font-size: 42px; letter-spacing: -2px;">
+              Citizen Reports</h1>
+              <p class="text-muted mb-0" style="font-size: 22px;">
+              Portal laporan warga SmartCity.</p>
             </div>
           </div>
-          <div class="p-4 mt-4" style="border-radius: 18px; background: rgba(13,143,216,0.08); border: 1px solid rgba(13,143,216,0.18);">
-            <p class="mb-0" style="font-size: 16px; color: #334155;">
-            Sistem laporan warga untuk membantu menjaga kebersihan, keamanan, 
-            dan kenyamanan lingkungan kota secara real-time.</p>
+          <div class="mx-auto mt-4 mb-5 p-4" style="max-width:900px; border-radius: 18px;
+          background: rgba(13,143,216,0.08); border: 1px solid rgba(13,143,216,0.18);">
+          <p class="mb-0" style="font-size: 16px; color: #334155;">
+          Sistem laporan warga untuk membantu menjaga kebersihan, keamanan,
+          dan kenyamanan lingkungan kota secara real-time.</p>
           </div>
-          <div class="mt-4">
-            <a href="#dashboard" class="btn btn-primary menu-btn px-4 py-2" style="border-radius: 14px; font-weight: 600;">
+          <div class="d-flex justify-content-center gap-3 flex-wrap mt-4">
+          <button class="btn btn-primary menu-btn px-4 py-2"
+          data-bs-toggle="modal"data-bs-target="#reportModal"
+          style="background:#3ebbc4;border:none;font-weight: 600; min-width:250px;">
+            <i class="bi bi-plus-circle me-2"></i>📝Buat Laporan Baru</button>
+          </div>
+          <div class="d-flex justify-content-center gap-3 flex-wrap mt-4">
+            <a href="#dashboard" class="btn btn-primary menu-btn px-4 py-2" style="background:#194761; border-radius: 14px; font-weight: 600;">
               <i class="bi bi-bar-chart-line me-2"></i> Lihat Statistik Kota
             </a>
+            <div id="listContainer" class="mt-5"></div>
+            <div
+              id="paginationContainer"
+              class="mt-4 text-center">
+            </div>
           </div>
         </div>
       </section>
@@ -126,6 +177,8 @@ function handleRouting() {
   document.getElementById('app-content').innerHTML = routes[hash];
   updateNavbarUser();
   if (hash === '#login' && typeof setupLoginForm === 'function') setupLoginForm();
+  if (hash === '#dashboard') {setTimeout(() => {loadDashboardData('feed',1);
+        loadSummaryStats()}, 100);}
 }
 
 window.addEventListener('hashchange', handleRouting);
