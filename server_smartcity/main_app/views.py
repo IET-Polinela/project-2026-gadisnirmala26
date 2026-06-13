@@ -29,6 +29,10 @@ class ReportListView(ListView):
     model = Report
     template_name = 'main_app/report_list.html'
     context_object_name = 'reports'
+    
+    def get_queryset(self):
+        queryset = Report.objects.exclude(status='DRAFT').order_by('-updated_at')
+        return queryset
 
 # CREATE
 class ReportCreateView(AdminRequiredMixin, CreateView):
@@ -54,6 +58,9 @@ class ReportDeleteView(AdminRequiredMixin, DeleteView):
 class ReportDetailView(DetailView):
     model = Report
     template_name = 'main_app/report_detail.html'
+
+    def get_queryset(self):
+        return Report.objects.exclude(status='DRAFT')
 
 class ReportUpdateStatusView(View):
     def post(self, request, pk):
@@ -86,7 +93,7 @@ class ReportSearchJsonView(View):
     def get(self, request, *args, **kwargs):
         query = request.GET.get('q', '').strip()
 
-        reports = Report.objects.all().order_by('-created_at')
+        reports = Report.objects.exclude(status='DRAFT').order_by('-created_at')
 
         if query:
             reports = reports.filter(title__icontains=query) | reports.filter(category__icontains=query) | reports.filter(location__icontains=query)
@@ -108,8 +115,8 @@ class ReportSearchJsonView(View):
 
 class ReportDetailJsonView(View):
     def get(self, request, pk, *args, **kwargs):
-        report = get_object_or_404(Report, pk=pk)
-
+        report = get_object_or_404(Report.objects.exclude(status='DRAFT'), pk=pk)
+        
         data = {
             'id': report.id,
             'title': report.title,

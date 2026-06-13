@@ -7,7 +7,13 @@
 body {
     margin: 0;
     font-family: 'Segoe UI', sans-serif;
-    background: linear-gradient(to bottom right, #ffffff, #bae6fd);
+    background: linear-gradient(rgba(223,244,255,0.45),  rgba(223,244,255,0.45)),
+    url('https://images.unsplash.com/photo-1514565131-fce0801e5785?q=80&w=1600&auto=format&fit=crop');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    color: #334155;
+    min-height: 100vh;
 }
 
 .container {
@@ -22,11 +28,15 @@ h1 {
 }
 
 .card {
-    background: white;
-    padding: 30px;
-    margin-top: 30px;
-    border-radius: 20px;
-    box-shadow: 0px 5px 20px rgba(0,0,0,0.1);
+    background: rgba(255,255,255,0.92);
+    backdrop-filter: blur(8px);
+    padding: 20px 30px;
+    border-radius: 24px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+    margin-top: 35px;
+    width: fit-content;
+    max-width: 900px;
+    margin: 35px auto;
 }
 
 p {
@@ -38,8 +48,8 @@ p {
     display: inline-block;
     margin: 10px;
     padding: 10px 20px;
-    background-color: #38bdf8;
-    color: white;
+    background-color: #ffffff;
+    color: rgb(46, 138, 180);
     text-decoration: none;
     border-radius: 50px;
 }
@@ -50,11 +60,8 @@ p {
 <body>
 
 <div class="container">
-
-    <h1>📞 Kontak CleanPulse</h1>
-
     <div class="card">
-
+    <h1>📞 Kontak CleanPulse</h1>
         <p><b>Email:</b> cleanpulse@gmail.com</p>
         <p><b>Telepon:</b> 2478201000</p>
         <p><b>Alamat:</b> Bandar Lampung</p>
@@ -63,7 +70,6 @@ p {
             Hubungi kami untuk informasi lebih lanjut mengenai sistem CleanPulse
             dan pengelolaan lingkungan berbasis teknologi.
         </p>
-
     </div>
 
     <div class="nav">

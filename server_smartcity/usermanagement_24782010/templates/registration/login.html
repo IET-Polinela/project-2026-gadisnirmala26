@@ -58,6 +58,10 @@
             <p class="text-center mt-4 mb-0 login-footer-text">
                 Silakan login untuk mengakses sistem CleanPulse.
             </p>
+            <p class="text-center mt-4 mb-0 login-footer-text">
+                Belum punya akun?
+            <a href="{% url 'register' %}" class="fw-semibold text-decoration-none">Register</a>
+            </p>
         </div>
     </div>
 </div>
@@ -141,8 +145,4 @@ document.getElementById('loginForm').addEventListener('submit', function() {
     document.getElementById('loginSpinner').classList.remove('d-none');
 });
 </script>
-<p class="text-center mt-4 mb-0 login-footer-text">
-    Belum punya akun?
-    <a href="{% url 'register' %}" class="fw-semibold text-decoration-none">Register</a>
-</p>
 {% endblock %}

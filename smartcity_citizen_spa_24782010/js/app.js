@@ -255,7 +255,7 @@ async function saveReport(status) {
             )
         )
         .hide();
-    loadDashboardData();
+    await loadDashboardData();
 }
 
 document.addEventListener(

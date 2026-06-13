@@ -21,7 +21,11 @@
         body {
             margin: 0;
             font-family: 'Poppins', sans-serif;
-            background: linear-gradient(to bottom right, #ffffff, #bae6fd);
+            background: linear-gradient(rgba(223,244,255,0.45), rgba(223,244,255,0.45)), 
+            url('https://images.unsplash.com/photo-1514565131-fce0801e5785?q=80&w=1600&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
             color: #334155;
             min-height: 100vh;
         }
@@ -153,7 +157,13 @@
         }
 
         .hero-box {
-            padding: 80px 20px;
+            background: rgb(255, 255, 255);
+            backdrop-filter: blur(10px);
+            max-width: 900px;
+            margin: 80px auto;
+            padding: 50px;
+            border-radius: 28px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.12);
             text-align: center;
         }
 
@@ -269,13 +279,6 @@
     <div class="container py-4">
         {% block content %}{% endblock %}
     </div>
-
-    <footer>
-        <div class="container">
-            <small>CleanPulse Smart City System</small>
-        </div>
-    </footer>
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     {% block extra_js %}{% endblock %}
 </body>

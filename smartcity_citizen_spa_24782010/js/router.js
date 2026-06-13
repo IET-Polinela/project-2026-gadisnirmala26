@@ -55,7 +55,7 @@ const routes = {
       </p>
       <div class="alert alert-info mt-4 p-4">
         Platform smart city berbasis data real-time yang menjaga
-        kebersihan kota seperti sistem sirkulasi vital,
+        kebersihan kota, seperti sistem sirkulasi vital,
         memastikan kota tetap sehat, hidup, dan produktif.
       </div>
       <div class="d-flex justify-content-center mb-4">
@@ -88,26 +88,11 @@ const routes = {
             </div>
           </div>
           <h4 class="fw-bold text-center mb-4">Statistik Laporan</h4>
-          <div class="p-3 mb-2 rounded bg-light">
-            Draft:
-          <span id="draftCount">0</span>
-        </div>
-        <div class="p-3 mb-2 rounded bg-light">
-          Reported:
-        <span id="reportedCount">0</span>
-        </div>
-        <div class="p-3 mb-2 rounded bg-light">
-          Verified:
-        <span id="verifiedCount">0</span>
-        </div>
-        <div class="p-3 mb-2 rounded bg-light">
-          In Progress:
-        <span id="progressCount">0</span>
-        </div>
-        <div class="p-3 rounded bg-light">
-          Resolved:
-        <span id="resolvedCount">0</span>
-        </div>
+          <div class="p-3 mb-2 rounded bg-warning bg-opacity-10 d-flex justify-content-between">📝 Draft:<span id="draftCount" class="fw-bold">0</span></div>
+        <div class="p-3 mb-2 rounded bg-secondary bg-opacity-10 d-flex justify-content-between">📢 Reported:<span id="reportedCount" class="fw-bold">0</span></div>
+        <div class="p-3 mb-2 rounded bg-info bg-opacity-10 d-flex justify-content-between"> ✅ Verified:<span id="verifiedCount" class="fw-bold">0</span></div>
+        <div class="p-3 mb-2 rounded bg-primary bg-opacity-10 d-flex justify-content-between">⏳ In Progress:<span id="progressCount" class="fw-bold">0</span></div>
+        <div class="p-3 rounded bg-success bg-opacity-10 d-flex justify-content-between">📈 Resolved:<span id="resolvedCount" class="fw-bold">0</span></div>
         </div>
       </aside>
     </div>
@@ -156,10 +141,11 @@ const routes = {
           style="background:#3ebbc4;border:none;font-weight: 600; min-width:250px;">
             <i class="bi bi-plus-circle me-2"></i>📝Buat Laporan Baru</button>
           </div>
-          <div class="d-flex justify-content-center gap-3 flex-wrap mt-4">
+          <div class="text-center mt-4">
             <a href="#dashboard" class="btn btn-primary menu-btn px-4 py-2" style="background:#194761; border-radius: 14px; font-weight: 600;">
               <i class="bi bi-bar-chart-line me-2"></i> Lihat Statistik Kota
             </a>
+          </div>
             <div id="listContainer" class="mt-5"></div>
             <div
               id="paginationContainer"
